@@ -1,6 +1,6 @@
 <?php
 
-namespace WebCrea\YandexMetrika;
+namespace WebCrea\YandexMetrikaSdk\Api;
 
 class CdpApi extends BaseApi
 {
@@ -12,7 +12,7 @@ class CdpApi extends BaseApi
      * @param array $data
      * @param string $mergeMode
      * @return mixed
-     * @throws \WC\YandexMetrika\YandexMetrikaException
+     * @throws \WebCrea\YandexMetrika\Exceptions\YandexMetrikaException
      */
     public function uploadOrdersJson(array $data, string $mergeMode)
     {

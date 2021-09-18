@@ -1,9 +1,9 @@
 {
-  "name": "webcrea/yandex-metrika",
-  "description": "Yandex Metrika API Library",
+  "name": "webcrea/yandex-metrika-sdk",
+  "description": "Yandex Metrika SDK",
   "homepage": "https://github.com/crawler364/yandex-metrika",
-  "keywords": ["yandex","metrika","api"],
-  "version": "0.1.5",
+  "keywords": ["yandex","metrika","api","sdk"],
+  "version": "0.2.2",
   "license": "MIT",
   "authors": [
     {
@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "WebCrea\\YandexMetrika\\": "src/"
+      "WebCrea\\YandexMetrikaSdk\\": "src/"
     }
   },
   "minimum-stability": "dev"
