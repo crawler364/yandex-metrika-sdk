@@ -1,6 +1,6 @@
 <?php
 
-namespace WebCrea\YandexMetrika\Api;
+namespace WebCrea\YandexMetrikaSdk\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;

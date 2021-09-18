@@ -1,6 +1,6 @@
 <?php
 
-namespace WebCrea\YandexMetrika\Api;
+namespace WebCrea\YandexMetrikaSdk\Api;
 
 class ManagementApi extends BaseApi
 {
