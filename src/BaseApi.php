@@ -1,6 +1,6 @@
 <?php
 
-namespace WC\YandexMetrika;
+namespace WebCrea\YandexMetrika;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
