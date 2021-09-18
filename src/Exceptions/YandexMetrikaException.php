@@ -1,6 +1,6 @@
 <?php
 
-namespace WebCrea\YandexMetrika;
+namespace WebCrea\YandexMetrika\Exceptions;
 
 use Exception;
 

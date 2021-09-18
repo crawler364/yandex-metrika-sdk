@@ -1,10 +1,11 @@
 <?php
 
-namespace WebCrea\YandexMetrika;
+namespace WebCrea\YandexMetrika\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\RequestOptions;
+use WebCrea\YandexMetrika\Exceptions\YandexMetrikaException;
 
 abstract class BaseApi
 {
