@@ -2,17 +2,33 @@
 
 namespace WebCrea\YandexMetrikaSdk\Api;
 
+use \WebCrea\YandexMetrikaSdk\Exceptions\YandexMetrikaException;
+
 class CdpApi extends BaseApi
 {
     protected $apiUrl = '/cdp/api/v1';
 
     /**
+     * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/maporderstatuses.html
+     * @param array $data
+     * @return mixed
+     * @throws YandexMetrikaException
+     */
+    public function mapOrderStatuses(array $data)
+    {
+        $method = '/schema/order_statuses';
+        $data = ['JSON' => $data];
+        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
+
+        return $this->query('POST', $methodUrl, null, $data);
+    }
+
+    /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/data/uploadordersjson.html
-     *
      * @param array $data
      * @param string $mergeMode
      * @return mixed
-     * @throws \WebCrea\YandexMetrika\Exceptions\YandexMetrikaException
+     * @throws YandexMetrikaException
      */
     public function uploadOrdersJson(array $data, string $mergeMode)
     {

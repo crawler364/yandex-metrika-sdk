@@ -5,7 +5,7 @@ namespace WebCrea\YandexMetrikaSdk\Api;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\RequestOptions;
-use WebCrea\YandexMetrika\Exceptions\YandexMetrikaException;
+use WebCrea\YandexMetrikaSdk\Exceptions\YandexMetrikaException;
 
 abstract class BaseApi
 {
