@@ -3,7 +3,7 @@
   "description": "Yandex Metrika SDK",
   "homepage": "https://github.com/crawler364/yandex-metrika",
   "keywords": ["yandex","metrika","api","sdk"],
-  "version": "0.2.2",
+  "version": "0.2.5",
   "license": "MIT",
   "authors": [
     {
