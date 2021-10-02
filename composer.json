@@ -3,7 +3,7 @@
   "description": "Yandex Metrika SDK",
   "homepage": "https://github.com/crawler364/yandex-metrika-sdk",
   "keywords": ["yandex","metrika","api","sdk"],
-  "version": "0.2.6",
+  "version": "0.2.7",
   "license": "MIT",
   "authors": [
     {
@@ -23,6 +23,5 @@
     "psr-4": {
       "WebCrea\\YandexMetrikaSdk\\": "src/"
     }
-  },
-  "minimum-stability": "dev"
+  }
 }

@@ -10,12 +10,23 @@ use WebCrea\YandexMetrikaSdk\Exceptions\YandexMetrikaException;
 abstract class BaseApi
 {
     protected $url = 'https://api-metrika.yandex.net';
+    /** @var string */
+    private $token;
+    /** @var mixed|null */
+    private $proxy;
+    /** @var mixed|null */
+    private $counterId;
 
-    public function __construct($token, $counterId = null, $proxy = null)
+    public function __construct(string $token, $counterId = null, $proxy = null)
     {
         $this->token = $token;
         $this->proxy = $proxy;
         $this->counterId = $counterId;
+    }
+
+    protected function getCounterUrl(): string
+    {
+        return "/counter/$this->counterId";
     }
 
     protected function query($type, $method, $params = [], $data = [])
@@ -60,10 +71,5 @@ abstract class BaseApi
         }
 
         return $config;
-    }
-
-    protected function getCounterUrl(): string
-    {
-        return "/counter/$this->counterId";
     }
 }
