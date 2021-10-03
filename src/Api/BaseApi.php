@@ -96,9 +96,11 @@ abstract class BaseApi
             case 'FILE':
                 $config[RequestOptions::HEADERS]["Content-Type"] = "Content-Type: multipart/form-data";
                 $config[RequestOptions::MULTIPART] = [
-                    'name' => $requestBody['CONTENT'],
-                    'contents' => file_get_contents($requestBody['CONTENT']),
-                    'filename' => $requestBody['CONTENT'],
+                    [
+                        'name' => $requestBody['CONTENT'],
+                        'contents' => file_get_contents($requestBody['CONTENT']),
+                        'filename' => $requestBody['CONTENT'],
+                    ],
                 ];
                 break;
         }
