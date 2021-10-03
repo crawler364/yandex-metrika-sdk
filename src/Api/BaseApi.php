@@ -16,24 +16,21 @@ abstract class BaseApi
 
     /** @var string */
     private $token;
-    /** @var int|null */
-    private $counterId;
     /** @var mixed|null */
     private $proxy;
 
-    public function __construct(string $token, int $counterId = null, $proxy = null)
+    public function __construct(string $token, $proxy = null)
     {
         $this->token = $token;
         $this->proxy = $proxy;
-        $this->counterId = $counterId;
     }
 
     /**
      * @return string
      */
-    protected function getCounterUrn(): string
+    protected function getCounterUrn($counterId): string
     {
-        return "/counter/$this->counterId";
+        return "/counter/$counterId";
     }
 
     /**
