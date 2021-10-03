@@ -15,20 +15,16 @@ class CdpApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/createattributes.html
      *
+     * @param int   $counterId
      * @param array $content
-     * @param null  $entitySubtype
-     * @param null  $entityType
+     * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function createAttributes(array $content, $entitySubtype = null, $entityType = null): array
+    public function createAttributes(int $counterId, array $content, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/attributes');
-        $requestParams = [
-            'entity_subtype' => $entitySubtype,
-            'entity_type' => $entityType,
-        ];
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/schema/attributes');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, $requestParams, $requestBody);
@@ -37,14 +33,15 @@ class CdpApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/createproducts.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function createProducts(array $content): array
+    public function createProducts(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/products');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/schema/products');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -53,19 +50,15 @@ class CdpApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/getattributes.html
      *
-     * @param null $entitySubtype
-     * @param null $entityType
+     * @param int   $counterId
+     * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getAttributes($entitySubtype = null, $entityType = null): array
+    public function getAttributes(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/attributes');
-        $requestParams = [
-            'entity_subtype' => $entitySubtype,
-            'entity_type' => $entityType,
-        ];
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/schema/attributes');
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -73,39 +66,45 @@ class CdpApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/uploadings/getlastuploadings.html
      *
-     * @param null $limit
+     * @param int   $counterId
+     * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getLastUploadings($limit = null): array
+    public function getLastUploadings(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/last_uploadings');
-        $requestParams = ['limit' => $limit];
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/last_uploadings');
 
         return $this->query('GET', $requestUri, $requestParams);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/getpredefinedtypes.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getPredefinedTypes(): array
+    public function getPredefinedTypes(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/predefined_types');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/schema/predefined_types');
 
         return $this->query('GET', $requestUri);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/gettypes.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getTypes(): array
+    public function getTypes(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/types');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/schema/types');
 
         return $this->query('GET', $requestUri);
     }
@@ -113,14 +112,15 @@ class CdpApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/maporderstatuses.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function mapOrderStatuses(array $content): array
+    public function mapOrderStatuses(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/order_statuses');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/schema/order_statuses');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -129,16 +129,16 @@ class CdpApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/data/uploadcontactjson.html
      *
-     * @param array  $content
-     * @param string $mergeMode
+     * @param int   $counterId
+     * @param array $content
+     * @param array $requestParams
      *
-     * @return mixed
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function uploadContactsJson(array $content, string $mergeMode)
+    public function uploadContactsJson(int $counterId, array $content, array $requestParams): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/data/contacts');
-        $requestParams = ['merge_mode' => $mergeMode];
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/data/contacts');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, $requestParams, $requestBody);
@@ -163,32 +163,18 @@ class CdpApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/data/uploadordersjson.html
      *
-     * @param array  $content
-     * @param string $mergeMode
+     * @param int   $counterId
+     * @param array $content
+     * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function uploadOrdersJson(array $content, string $mergeMode): array
+    public function uploadOrdersJson(int $counterId, array $content, array $requestParams): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/data/orders');
-        $requestParams = ['merge_mode' => $mergeMode];
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/data/orders');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, $requestParams, $requestBody);
-    }
-
-    /**
-     * @deprecated
-     *
-     * @param string $mergeMode
-     * @param array  $content
-     *
-     * @return array
-     * @throws YandexMetrikaException
-     */
-    public function uploadContactJson(array $content, string $mergeMode): array
-    {
-        return $this->uploadContactsJson($content, $mergeMode);
     }
 }

@@ -1,8 +1,5 @@
 <?php
 
-//todo стоит ли счетчик передавать в методы тк не везде используется?
-
-
 namespace WebCrea\YandexMetrikaSdk\Api;
 
 use WebCrea\YandexMetrikaSdk\Exceptions\YandexMetrikaException;
@@ -16,7 +13,6 @@ class ManagementApi extends BaseApi
     protected $apiVer = '/v1';
 
     //region Tag management \ Управление счетчиками
-
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/counters/counters.html
      *
@@ -35,14 +31,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/counters/counter.html
      *
+     * @param int   $counterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getCounter(array $requestParams = []): array
+    public function getCounter(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn());
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId));
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -67,15 +64,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/counters/editcounter.html
      *
+     * @param int   $counterId
      * @param array $content
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function editCounter(array $content, array $requestParams = []): array
+    public function editCounter(int $counterId, array $content, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn());
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId));
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('PUT', $requestUri, $requestParams, $requestBody);
@@ -83,24 +81,30 @@ class ManagementApi extends BaseApi
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/counters/deletecounter.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deleteCounter(): array
+    public function deleteCounter(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn());
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId));
 
         return $this->query('DELETE', $requestUri);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/counters/undeletecounter.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function undeleteCounter(): array
+    public function undeleteCounter(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/undelete');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/undelete');
 
         return $this->query('POST', $requestUri);
     }
@@ -110,14 +114,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/goals/goals.html
      *
+     * @param int   $counterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getGoals(array $requestParams = []): array
+    public function getGoals(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/goals');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/goals');
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -125,15 +130,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/goals/goal.html
      *
+     * @param int   $counterId
      * @param int   $goalId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getGoal(int $goalId, array $requestParams = []): array
+    public function getGoal(int $counterId, int $goalId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/goal/$goalId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/goal/$goalId");
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -141,14 +147,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/goals/addgoal.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function addGoal(array $content): array
+    public function addGoal(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/goals');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/goals');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -157,15 +164,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/goals/editgoal.html
      *
+     * @param int   $counterId
      * @param int   $goalId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function editGoal(int $goalId, array $content): array
+    public function editGoal(int $counterId, int $goalId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/goal/$goalId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/goal/$goalId");
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('PUT', $requestUri, [], $requestBody);
@@ -174,14 +182,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/goals/deletegoal.html
      *
+     * @param int $counterId
      * @param int $goalId
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deleteGoal(int $goalId): array
+    public function deleteGoal(int $counterId, int $goalId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/goal/$goalId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/goal/$goalId");
 
         return $this->query('DELETE', $requestUri);
     }
@@ -204,14 +213,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/filters/filters.html
      *
+     * @param int   $counterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getFilters(array $requestParams = []): array
+    public function getFilters(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/filters');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/filters');
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -219,15 +229,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/filters/filter.html
      *
+     * @param int   $counterId
      * @param int   $filterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getFilter(int $filterId, array $requestParams = []): array
+    public function getFilter(int $counterId, int $filterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/filter/$filterId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/filter/$filterId");
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -235,14 +246,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/filters/addfilter.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function addFilter(array $content): array
+    public function addFilter(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/filters');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/filters');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -251,15 +263,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/filters/editfilter.html
      *
+     * @param int   $counterId
      * @param int   $filterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function editFilter(int $filterId, array $content): array
+    public function editFilter(int $counterId, int $filterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/filter/$filterId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/filter/$filterId");
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('PUT', $requestUri, [], $requestBody);
@@ -268,14 +281,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/filters/deletefilter.html
      *
+     * @param int $counterId
      * @param int $filterId
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deleteFilter(int $filterId): array
+    public function deleteFilter(int $counterId, int $filterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/filter/$filterId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/filter/$filterId");
 
         return $this->query('DELETE', $requestUri);
     }
@@ -285,14 +299,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/operations/operations.html
      *
+     * @param int   $counterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getOperations(array $requestParams = []): array
+    public function getOperations(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/operations');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/operations');
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -300,15 +315,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/operations/operation.html
      *
+     * @param int   $counterId
      * @param int   $operationId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getOperation(int $operationId, array $requestParams = []): array
+    public function getOperation(int $counterId, int $operationId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/operation/$operationId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/operation/$operationId");
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -316,14 +332,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/operations/addoperation.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function addOperation(array $content): array
+    public function addOperation(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/operations');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/operations');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -332,15 +349,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/operations/editoperation.html
      *
+     * @param int   $counterId
      * @param int   $operationId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function editOperation(int $operationId, array $content): array
+    public function editOperation(int $counterId, int $operationId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/operation/$operationId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/operation/$operationId");
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('PUT', $requestUri, [], $requestBody);
@@ -349,14 +367,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/operations/deleteoperation.html
      *
+     * @param int $counterId
      * @param int $operationId
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deleteOperation(int $operationId): array
+    public function deleteOperation(int $counterId, int $operationId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/operation/$operationId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/operation/$operationId");
 
         return $this->query('DELETE', $requestUri);
     }
@@ -366,14 +385,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/grants/grants.html
      *
+     * @param int   $counterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getGrants(array $requestParams = []): array
+    public function getGrants(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/grants');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/grants');
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -381,14 +401,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/grants/grant.html
      *
+     * @param int   $counterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getGrant(array $requestParams = []): array
+    public function getGrant(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/grant');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/grant');
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -396,14 +417,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/public-grants/addgrant.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function addPublicGrant(array $content): array
+    public function addPublicGrant(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/public_grant');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/public_grant');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -411,12 +433,15 @@ class ManagementApi extends BaseApi
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/public-grants/deletegrant.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deletePublicGrant(): array
+    public function deletePublicGrant(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/public_grant');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/public_grant');
 
         return $this->query('DELETE', $requestUri);
     }
@@ -424,14 +449,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/grants/addgrant.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function addGrant(array $content): array
+    public function addGrant(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/grants');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/grants');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -440,14 +466,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/grants/editgrant.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function editGrant(array $content): array
+    public function editGrant(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/grant');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/grant');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('PUT', $requestUri, [], $requestBody);
@@ -456,14 +483,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/grants/deletegrant.html
      *
+     * @param int   $counterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deleteGrant(array $requestParams = []): array
+    public function deleteGrant(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/grant');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/grant');
 
         return $this->query('DELETE', $requestUri, $requestParams);
     }
@@ -665,14 +693,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/links/setcounterlabel.html
      *
+     * @param int $counterId
      * @param int $labelId
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function setCounterLabel(int $labelId): array
+    public function setCounterLabel(int $counterId, int $labelId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/label/$labelId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/label/$labelId");
 
         return $this->query('POST', $requestUri);
     }
@@ -680,14 +709,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/links/unsetcounterlabel.html
      *
+     * @param int $counterId
      * @param int $labelId
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function unsetCounterLabel(int $labelId): array
+    public function unsetCounterLabel(int $counterId, int $labelId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/label/$labelId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/label/$labelId");
 
         return $this->query('DELETE', $requestUri);
     }
@@ -697,12 +727,15 @@ class ManagementApi extends BaseApi
     //region Segment management \ Управление сегментами
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/segments/getsegmentsforcounter.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getSegments(): array
+    public function getSegments(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/apisegment/segments');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/apisegment/segments');
 
         return $this->query('GET', $requestUri);
     }
@@ -710,14 +743,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/segments/createsegment.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function addSegment(array $content): array
+    public function addSegment(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/apisegment/segments');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/apisegment/segments');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -726,14 +760,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/segments/getsegment.html
      *
+     * @param int $counterId
      * @param int $segmentId
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getSegment(int $segmentId): array
+    public function getSegment(int $counterId, int $segmentId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/apisegment/segment/$segmentId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/apisegment/segment/$segmentId");
 
         return $this->query('GET', $requestUri);
     }
@@ -741,15 +776,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/segments/updatesegment.html
      *
+     * @param int   $counterId
      * @param int   $segmentId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function editSegment(int $segmentId, array $content): array
+    public function editSegment(int $counterId, int $segmentId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/apisegment/segment/$segmentId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/apisegment/segment/$segmentId");
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('PUT', $requestUri, [], $requestBody);
@@ -758,14 +794,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/segments/deletesegment.html
      *
+     * @param int $counterId
      * @param int $segmentId
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deleteSegment(int $segmentId): array
+    public function deleteSegment(int $counterId, int $segmentId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/apisegment/segment/$segmentId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/apisegment/segment/$segmentId");
 
         return $this->query('DELETE', $requestUri);
     }
@@ -775,12 +812,15 @@ class ManagementApi extends BaseApi
     //region Comments on charts \ Примечания на графиках
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/chart_annotation/findall.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getChartAnnotations(): array
+    public function getChartAnnotations(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/chart_annotations');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/chart_annotations');
 
         return $this->query('GET', $requestUri);
     }
@@ -788,14 +828,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/chart_annotation/get.html
      *
+     * @param int $counterId
      * @param int $id
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getChartAnnotation(int $id): array
+    public function getChartAnnotation(int $counterId, int $id): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/chart_annotation/$id");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/chart_annotation/$id");
 
         return $this->query('GET', $requestUri);
     }
@@ -803,14 +844,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/chart_annotation/create.html
      *
+     * @param int   $counterId
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function addChartAnnotation(array $content): array
+    public function addChartAnnotation(int $counterId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/chart_annotations');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/chart_annotations');
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -819,15 +861,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/chart_annotation/update.html
      *
+     * @param int   $counterId
      * @param int   $id
      * @param array $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function editChartAnnotation(int $id, array $content): array
+    public function editChartAnnotation(int $counterId, int $id, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/chart_annotation/$id");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/chart_annotation/$id");
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('PUT', $requestUri, [], $requestBody);
@@ -836,14 +879,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/chart_annotation/delete.html
      *
+     * @param int $counterId
      * @param int $id
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deleteChartAnnotation(int $id): array
+    public function deleteChartAnnotation(int $counterId, int $id): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/chart_annotation/$id");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/chart_annotation/$id");
 
         return $this->query('DELETE', $requestUri);
     }
@@ -852,12 +896,15 @@ class ManagementApi extends BaseApi
     //region Managing data uploads \ Список загрузок параметров
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/userparams/findall.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getUserParamsUploadings(): array
+    public function getUserParamsUploadings(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/user_params/uploadings');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/user_params/uploadings');
 
         return $this->query('GET', $requestUri);
     }
@@ -865,14 +912,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/userparams/findbyid.html
      *
+     * @param int    $counterId
      * @param string $uploadingId
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getUserParamsUploading(string $uploadingId): array
+    public function getUserParamsUploading(int $counterId, string $uploadingId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/user_params/uploading/$uploadingId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/user_params/uploading/$uploadingId");
 
         return $this->query('GET', $requestUri);
     }
@@ -880,15 +928,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/userparams/confirm.html
      *
+     * @param int    $counterId
      * @param string $uploadingId
      * @param array  $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function confirmUserParamsUploading(string $uploadingId, array $content): array
+    public function confirmUserParamsUploading(int $counterId, string $uploadingId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/user_params/uploading/$uploadingId/confirm");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/user_params/uploading/$uploadingId/confirm");
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('POST', $requestUri, [], $requestBody);
@@ -897,15 +946,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/userparams/upload.html
      *
+     * @param int    $counterId
      * @param array  $requestParams
      * @param string $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function uploadUserParams(array $requestParams, string $content): array
+    public function uploadUserParams(int $counterId, array $requestParams, string $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/user_params/uploadings/upload');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/user_params/uploadings/upload');
         $requestBody = $this->getRequestBody($content, 'FILE');
 
         return $this->query('POST', $requestUri, $requestParams, $requestBody);
@@ -914,15 +964,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/userparams/update.html
      *
+     * @param int    $counterId
      * @param string $uploadingId
      * @param array  $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function editUserParamsUploading(string $uploadingId, array $content): array
+    public function editUserParamsUploading(int $counterId, string $uploadingId, array $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/user_params/uploading/$uploadingId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/user_params/uploading/$uploadingId");
         $requestBody = $this->getRequestBody($content, 'JSON');
 
         return $this->query('PUT', $requestUri, [], $requestBody);
@@ -932,12 +983,15 @@ class ManagementApi extends BaseApi
     //region Managing offline data \ Управление офлайн-конверсиями
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/findall.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getOfflineConversionsUploadings(): array
+    public function getOfflineConversionsUploadings(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/uploadings');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/uploadings');
 
         return $this->query('GET', $requestUri);
     }
@@ -945,14 +999,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/findbyid.html
      *
+     * @param int    $counterId
      * @param string $id
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getOfflineConversionsUploading(string $id): array
+    public function getOfflineConversionsUploading(int $counterId, string $id): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/offline_conversions/uploading/$id");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/offline_conversions/uploading/$id");
 
         return $this->query('GET', $requestUri);
     }
@@ -960,15 +1015,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/upload.html
      *
+     * @param int    $counterId
      * @param array  $requestParams
      * @param string $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function uploadOfflineConversions(array $requestParams, string $content): array
+    public function uploadOfflineConversions(int $counterId, array $requestParams, string $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/upload');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/upload');
         $requestBody = $this->getRequestBody($content, 'FILE');
 
         return $this->query('POST', $requestUri, $requestParams, $requestBody);
@@ -976,36 +1032,45 @@ class ManagementApi extends BaseApi
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/enableextendedthreshold.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function enableExtendedThreshold(): array
+    public function enableExtendedThreshold(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/extended_threshold');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/extended_threshold');
 
         return $this->query('POST', $requestUri);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/disableextendedthreshold.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function disableExtendedThreshold(): array
+    public function disableExtendedThreshold(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/extended_threshold');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/extended_threshold');
 
         return $this->query('DELETE', $requestUri);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/getvisitjointhreshold.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getVisitJoinThreshold(): array
+    public function getVisitJoinThreshold(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/visit_join_threshold');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/visit_join_threshold');
 
         return $this->query('GET', $requestUri);
     }
@@ -1014,12 +1079,15 @@ class ManagementApi extends BaseApi
     //region Managing offline data \ Управление звонками
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/findallcalluploadings.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getCallsUploadings(): array
+    public function getCallsUploadings(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/calls_uploadings');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/calls_uploadings');
 
         return $this->query('GET', $requestUri);
     }
@@ -1027,14 +1095,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/findcalluploadingbyid.html
      *
+     * @param int    $counterId
      * @param string $id
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getCallsUploading(string $id): array
+    public function getCallsUploading(int $counterId, string $id): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/offline_conversions/calls_uploading/$id");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/offline_conversions/calls_uploading/$id");
 
         return $this->query('GET', $requestUri);
     }
@@ -1042,15 +1111,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/uploadcalls.html
      *
+     * @param int    $counterId
      * @param array  $requestParams
      * @param string $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function uploadCalls(array $requestParams, string $content): array
+    public function uploadCalls(int $counterId, array $requestParams, string $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/upload_calls');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/upload_calls');
         $requestBody = $this->getRequestBody($content, 'FILE');
 
         return $this->query('POST', $requestUri, $requestParams, $requestBody);
@@ -1058,36 +1128,45 @@ class ManagementApi extends BaseApi
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/enablecallsextendedthreshold.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function enableCallsExtendedThreshold(): array
+    public function enableCallsExtendedThreshold(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/calls_extended_threshold');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/calls_extended_threshold');
 
         return $this->query('POST', $requestUri);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/disablecallsextendedthreshold.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function disableCallsExtendedThreshold(): array
+    public function disableCallsExtendedThreshold(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/calls_extended_threshold');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/calls_extended_threshold');
 
         return $this->query('DELETE', $requestUri);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/offline_conversion/getcallsvisitjointhreshold.html
+     *
+     * @param int $counterId
+     *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getCallsExtendedThreshold(): array
+    public function getCallsExtendedThreshold(int $counterId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/offline_conversions/calls_visit_join_threshold');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/offline_conversions/calls_visit_join_threshold');
 
         return $this->query('GET', $requestUri);
     }
@@ -1097,14 +1176,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/expenses/findall.html
      *
+     * @param int   $counterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getExpenseUploadings(array $requestParams = []): array
+    public function getExpenseUploadings(int $counterId, array $requestParams = []): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/expense/uploadings');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/expense/uploadings');
 
         return $this->query('GET', $requestUri, $requestParams);
     }
@@ -1112,14 +1192,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/expenses/findbyid.html
      *
-     * @param array $requestParams
+     * @param int    $counterId
+     * @param string $uploadingId
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function getExpenseUploading(string $uploadingId): array
+    public function getExpenseUploading(int $counterId, string $uploadingId): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . "/expense/uploading/$uploadingId");
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . "/expense/uploading/$uploadingId");
 
         return $this->query('GET', $requestUri);
     }
@@ -1127,15 +1208,16 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/expenses/uploadbody.html
      *
+     * @param int    $counterId
      * @param array  $requestParams
      * @param string $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function uploadExpense(array $requestParams, string $content)
+    public function uploadExpense(int $counterId, array $requestParams, string $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/expense/upload');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/expense/upload');
         $requestBody = $this->getRequestBody($content, 'FILE');
 
         return $this->query('POST', $requestUri, $requestParams, $requestBody);
@@ -1144,14 +1226,15 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/expenses/uploadremovesingleline.html
      *
+     * @param int   $counterId
      * @param array $requestParams
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deleteSingleExpense(array $requestParams): array
+    public function deleteSingleExpense(int $counterId, array $requestParams): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/expense/delete_single');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/expense/delete_single');
 
         return $this->query('POST', $requestUri, $requestParams);
     }
@@ -1159,19 +1242,19 @@ class ManagementApi extends BaseApi
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/management/expenses/uploadremovemultipart.html
      *
+     * @param int    $counterId
      * @param array  $requestParams
      * @param string $content
      *
      * @return array
      * @throws YandexMetrikaException
      */
-    public function deleteExpense(array $requestParams, string $content)
+    public function deleteExpense(int $counterId, array $requestParams, string $content): array
     {
-        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/expense/delete');
+        $requestUri = $this->getRequestUri($this->getCounterUrn($counterId) . '/expense/delete');
         $requestBody = $this->getRequestBody($content, 'FILE');
 
         return $this->query('POST', $requestUri, $requestParams, $requestBody);
     }
     //endregion
-
 }
