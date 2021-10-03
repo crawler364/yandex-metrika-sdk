@@ -25,7 +25,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function counters(array $requestParams = []): array
+    public function getCounters(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri('/counters');
 
@@ -40,7 +40,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function counter(array $requestParams = []): array
+    public function getCounter(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri($this->getCounterUrn());
 
@@ -115,7 +115,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function goals(array $requestParams = []): array
+    public function getGoals(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri($this->getCounterUrn() . '/goals');
 
@@ -131,7 +131,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function goal(int $goalId, array $requestParams = []): array
+    public function getGoal(int $goalId, array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri($this->getCounterUrn() . "/goal/$goalId");
 
@@ -209,7 +209,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function filters(array $requestParams = []): array
+    public function getFilters(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri($this->getCounterUrn() . '/filters');
 
@@ -225,7 +225,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function filter(int $filterId, array $requestParams = []): array
+    public function getFilter(int $filterId, array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri($this->getCounterUrn() . "/filter/$filterId");
 
@@ -290,7 +290,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function operations(array $requestParams = []): array
+    public function getOperations(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri($this->getCounterUrn() . '/operations');
 
@@ -306,7 +306,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function operation(int $operationId, array $requestParams = []): array
+    public function getOperation(int $operationId, array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri($this->getCounterUrn() . "/operation/$operationId");
 
@@ -371,7 +371,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function grants(array $requestParams = []): array
+    public function getGrants(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri($this->getCounterUrn() . '/grants');
 
@@ -386,7 +386,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function grant(array $requestParams = []): array
+    public function getGrant(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri($this->getCounterUrn() . '/grant');
 
@@ -479,7 +479,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function accounts(array $requestParams = []): array
+    public function getAccounts(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri('/accounts');
 
@@ -527,7 +527,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function delegates(array $requestParams = []): array
+    public function getDelegates(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri('/delegates');
 
@@ -575,7 +575,7 @@ class ManagementApi extends BaseApi
      * @return array
      * @throws YandexMetrikaException
      */
-    public function clients(array $requestParams = []): array
+    public function getClients(array $requestParams = []): array
     {
         $requestUri = $this->getRequestUri('/clients');
 
