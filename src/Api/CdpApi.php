@@ -9,134 +9,139 @@ use \WebCrea\YandexMetrikaSdk\Exceptions\YandexMetrikaException;
  */
 class CdpApi extends BaseApi
 {
-    protected $apiUrl = '/cdp/api/v1';
+    protected $apiDir = '/cdp/api';
+    protected $apiVer = '/v1';
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/createattributes.html
-     * @param array $data
-     * @param null $entitySubtype
-     * @param null $entityType
-     * @return mixed
+     *
+     * @param array $content
+     * @param null  $entitySubtype
+     * @param null  $entityType
+     *
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function createAttributes(array $data, $entitySubtype = null, $entityType = null)
+    public function createAttributes(array $content, $entitySubtype = null, $entityType = null): array
     {
-        $method = '/schema/attributes';
-        $params = [
+        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/attributes');
+        $requestParams = [
             'entity_subtype' => $entitySubtype,
             'entity_type' => $entityType,
         ];
-        $data = ['JSON' => $data];
-        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
+        $requestBody = $this->getRequestBody($content, 'JSON');
 
-        return $this->query('POST', $methodUrl, $params, $data);
+        return $this->query('POST', $requestUri, $requestParams, $requestBody);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/createproducts.html
-     * @param array $data
-     * @return mixed
+     *
+     * @param array $content
+     *
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function createProducts(array $data)
+    public function createProducts(array $content): array
     {
-        $method = '/schema/products';
-        $data = ['JSON' => $data];
-        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
+        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/products');
+        $requestBody = $this->getRequestBody($content, 'JSON');
 
-        return $this->query('POST', $methodUrl, null, $data);
+        return $this->query('POST', $requestUri, [], $requestBody);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/getattributes.html
+     *
      * @param null $entitySubtype
      * @param null $entityType
-     * @return mixed
+     *
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function getAttributes($entitySubtype = null, $entityType = null)
+    public function getAttributes($entitySubtype = null, $entityType = null): array
     {
-        $method = '/schema/attributes';
-        $params = [
+        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/attributes');
+        $requestParams = [
             'entity_subtype' => $entitySubtype,
             'entity_type' => $entityType,
         ];
-        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
 
-        return $this->query('GET', $methodUrl, $params);
+        return $this->query('GET', $requestUri, $requestParams);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/uploadings/getlastuploadings.html
+     *
      * @param null $limit
-     * @return mixed
+     *
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function getLastUploadings($limit = null)
+    public function getLastUploadings($limit = null): array
     {
-        $method = '/last_uploadings';
-        $params = ['limit' => $limit];
-        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
+        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/last_uploadings');
+        $requestParams = ['limit' => $limit];
 
-        return $this->query('GET', $methodUrl, $params);
+        return $this->query('GET', $requestUri, $requestParams);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/getpredefinedtypes.html
-     * @return mixed
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function getPredefinedTypes()
+    public function getPredefinedTypes(): array
     {
-        $method = '/schema/predefined_types';
-        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
+        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/predefined_types');
 
-        return $this->query('GET', $methodUrl);
+        return $this->query('GET', $requestUri);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/gettypes.html
-     * @return mixed
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function getTypes()
+    public function getTypes(): array
     {
-        $method = '/schema/types';
-        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
+        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/types');
 
-        return $this->query('GET', $methodUrl);
+        return $this->query('GET', $requestUri);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/schema/maporderstatuses.html
-     * @param array $data
-     * @return mixed
+     *
+     * @param array $content
+     *
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function mapOrderStatuses(array $data)
+    public function mapOrderStatuses(array $content): array
     {
-        $method = '/schema/order_statuses';
-        $data = ['JSON' => $data];
-        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
+        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/schema/order_statuses');
+        $requestBody = $this->getRequestBody($content, 'JSON');
 
-        return $this->query('POST', $methodUrl, null, $data);
+        return $this->query('POST', $requestUri, [], $requestBody);
     }
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/data/uploadcontactjson.html
-     * @param array $data
+     *
+     * @param array  $content
      * @param string $mergeMode
+     *
      * @return mixed
      * @throws YandexMetrikaException
      */
-    public function uploadContactsJson(array $data, string $mergeMode)
+    public function uploadContactsJson(array $content, string $mergeMode)
     {
-        $method = '/data/contacts';
-        $params = ['merge_mode' => $mergeMode];
-        $data = ['JSON' => $data];
-        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
+        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/data/contacts');
+        $requestParams = ['merge_mode' => $mergeMode];
+        $requestBody = $this->getRequestBody($content, 'JSON');
 
-        return $this->query('POST', $methodUrl, $params, $data);
+        return $this->query('POST', $requestUri, $requestParams, $requestBody);
     }
 
     /**
@@ -157,29 +162,33 @@ class CdpApi extends BaseApi
 
     /**
      * @see https://yandex.ru/dev/metrika/doc/api2/crm/data/uploadordersjson.html
-     * @param array $data
+     *
+     * @param array  $content
      * @param string $mergeMode
-     * @return mixed
+     *
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function uploadOrdersJson(array $data, string $mergeMode)
+    public function uploadOrdersJson(array $content, string $mergeMode): array
     {
-        $method = '/data/orders';
-        $params = ['merge_mode' => $mergeMode];
-        $data = ['JSON' => $data];
-        $methodUrl = $this->apiUrl . $this->getCounterUrl() . $method;
+        $requestUri = $this->getRequestUri($this->getCounterUrn() . '/data/orders');
+        $requestParams = ['merge_mode' => $mergeMode];
+        $requestBody = $this->getRequestBody($content, 'JSON');
 
-        return $this->query('POST', $methodUrl, $params, $data);
+        return $this->query('POST', $requestUri, $requestParams, $requestBody);
     }
 
     /**
      * @deprecated
-     * @param array $data
+     *
      * @param string $mergeMode
-     * @return mixed
+     * @param array  $content
+     *
+     * @return array
      * @throws YandexMetrikaException
      */
-    public function uploadContactJson(array $data, string $mergeMode){
-        return $this->uploadContactsJson($data, $mergeMode);
+    public function uploadContactJson(array $content, string $mergeMode): array
+    {
+        return $this->uploadContactsJson($content, $mergeMode);
     }
 }
