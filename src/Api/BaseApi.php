@@ -3,67 +3,120 @@
 namespace WebCrea\YandexMetrikaSdk\Api;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use WebCrea\YandexMetrikaSdk\Exceptions\YandexMetrikaException;
 
+
 abstract class BaseApi
 {
-    protected $url = 'https://api-metrika.yandex.net';
+    protected $apiUrl = 'https://api-metrika.yandex.net';
+    protected $apiDir;
+    protected $apiVer;
 
-    public function __construct($token, $counterId = null, $proxy = null)
+    /** @var string */
+    private $token;
+    /** @var int|null */
+    private $counterId;
+    /** @var mixed|null */
+    private $proxy;
+
+    public function __construct(string $token, int $counterId = null, $proxy = null)
     {
         $this->token = $token;
         $this->proxy = $proxy;
         $this->counterId = $counterId;
     }
 
-    protected function query($type, $method, $params = [], $data = [])
+    /**
+     * @return string
+     */
+    protected function getCounterUrn(): string
+    {
+        return "/counter/$this->counterId";
+    }
+
+    /**
+     * @param string $type
+     * @param string $requestUri
+     * @param array  $requestParams
+     * @param array  $requestBody
+     *
+     * @return array
+     * @throws YandexMetrikaException
+     */
+    protected function query(string $type, string $requestUri, array $requestParams = [], array $requestBody = []): array
     {
         try {
-            $client = new Client($this->getHttpClientConfig($params, $data));
-            $response = $client->request($type, $this->url . $method);
+            $client = new Client($this->getHttpClientConfig($requestParams, $requestBody));
+            $response = $client->request($type, $requestUri);
             return json_decode($response->getBody(), true);
-        } catch (ClientException $e) {
+        } catch (GuzzleException $e) {
             throw new YandexMetrikaException($e->getMessage());
         }
     }
 
-    private function getHttpClientConfig($params, $data): array
+    /**
+     * @param $content
+     * @param $type
+     *
+     * @return array
+     */
+    protected function getRequestBody($content, $type): array
     {
-        // Headers
+        return [
+            'CONTENT' => $content,
+            'TYPE' => $type,
+        ];
+    }
+
+    /**
+     * @param $method
+     *
+     * @return string
+     */
+    protected function getRequestUri($method): string
+    {
+        return $this->apiUrl . $this->apiDir . $this->apiVer . $method;
+    }
+
+    /**
+     * @param $requestParams
+     * @param $requestBody
+     *
+     * @return array
+     */
+    private function getHttpClientConfig($requestParams, $requestBody): array
+    {
+        switch ($requestBody['TYPE']) {
+            case 'JSON':
+                $config[RequestOptions::HEADERS]["Content-Type"] = "Content-Type: application/json";
+                $config[RequestOptions::JSON] = $requestBody['CONTENT'];
+                break;
+            case 'FILE':
+                $config[RequestOptions::HEADERS]["Content-Type"] = "Content-Type: multipart/form-data";
+                $config[RequestOptions::MULTIPART] = [
+                    [
+                        'name' => $requestBody['CONTENT'],
+                        'contents' => file_get_contents($requestBody['CONTENT']),
+                        'filename' => $requestBody['CONTENT'],
+                    ],
+                ];
+                break;
+        }
+
         $config[RequestOptions::HEADERS] = [
             "Authorization" => "OAuth $this->token",
         ];
 
-        // Get params
-        if (!empty($params)) {
-            $config[RequestOptions::QUERY] = $params;
-        }
-
-        // Body
-        if ($data['JSON']) {
-            $config[RequestOptions::HEADERS]["Content-Type"] = "Content-Type: application/json";
-            $config[RequestOptions::JSON] = $data['JSON'];
-        } elseif ($data['FILE']) {
-            $config[RequestOptions::HEADERS]["Content-Type"] = "Content-Type: multipart/form-data";
-            $config[RequestOptions::MULTIPART] = [
-                'name' => $data['FILE'],
-                'contents' => file_get_contents($data['FILE']),
-                'filename' => $data['FILE'],
-            ];
-        }
-
-        // Proxy
         if (!empty($this->proxy)) {
             $config[RequestOptions::PROXY] = $this->proxy;
         }
 
-        return $config;
-    }
+        if (!empty($requestParams)) {
+            $config[RequestOptions::QUERY] = $requestParams;
+        }
 
-    protected function getCounterUrl(): string
-    {
-        return "/counter/$this->counterId";
+        return $config;
     }
 }
