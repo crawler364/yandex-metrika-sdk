@@ -6,12 +6,10 @@
     "yandex",
     "metrika",
     "api",
-    "sdk",
     "management",
-    "v2",
     "cdp"
   ],
-  "version": "0.3.3",
+  "version": "0.3.4",
   "license": "MIT",
   "authors": [
     {
