@@ -26,6 +26,8 @@ abstract class BaseApi
     }
 
     /**
+     * @param $counterId
+     *
      * @return string
      */
     protected function getCounterUrn($counterId): string
