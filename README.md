@@ -75,7 +75,7 @@ $orders['orders'] = [
         "update_date_time" => "2020-04-17 16:12:21",
         "finish_date_time" => "2020-04-17 11:59:00",
         "revenue" => 2000,
-        "order_status" => "Создан",
+        "order_status" => "N",
         "cost" => 100500,
         "products" => ["Товар А" => 173, "Товар Б" => 146],
     ],
